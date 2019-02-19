@@ -17,7 +17,7 @@ EOF
 
 PROFILE=default
 TMP_PROFILE=tmp
-IAM_USER_ARN=""
+IAM_MFR_ARN=""
 AUTHCODE=""
 DEFAULT_REGION="ap-northeast-1"
 
@@ -30,7 +30,7 @@ while getopts ":p:t:n:c:r:h" opt; do
             TMP_PROFILE=$OPTARG
             ;;
         n)
-            IAM_USER_ARN=$OPTARG
+            IAM_MFR_ARN=$OPTARG
             ;;
         c)
             AUTHCODE=$OPTARG
@@ -45,19 +45,19 @@ while getopts ":p:t:n:c:r:h" opt; do
     esac
 done
 
-if [ -z "$IAM_USER_ARN" ]; then
+if [ -z "$IAM_MFR_ARN" ]; then
     echo -n "Type MFA ARN: "
-    read -r IAM_USER_ARN
+    read -r IAM_MFR_ARN
 fi
 
-echo "Using MFA device: $IAM_USER_ARN"
+echo "Using MFA device: $IAM_MFR_ARN"
 
 if [ -z "$AUTHCODE" ]; then
     echo -n "Type MFA authcode: "
     read -r AUTHCODE
 fi
 
-response=$(aws --profile="$PROFILE" sts get-session-token --serial-number "$IAM_USER_ARN" --token-code "$AUTHCODE")
+response=$(aws --profile="$PROFILE" sts get-session-token --serial-number "$IAM_MFR_ARN" --token-code "$AUTHCODE")
 
 aws --profile="$TMP_PROFILE" configure set default.region "$DEFAULT_REGION"
 aws --profile="$TMP_PROFILE" configure set aws_access_key_id "$(echo "$response" | jq -r .Credentials.AccessKeyId)"
