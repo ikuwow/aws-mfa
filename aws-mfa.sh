@@ -62,4 +62,4 @@ aws --profile="$TMP_PROFILE" configure set aws_access_key_id "$(echo "$response"
 aws --profile="$TMP_PROFILE" configure set aws_secret_access_key "$(echo "$response" | jq -r .Credentials.SecretAccessKey)"
 aws --profile="$TMP_PROFILE" configure set aws_session_token "$(echo "$response" | jq -r .Credentials.SessionToken)"
 
-echo "Successfully saved aws credential as profile \"tmp\""
+echo "Successfully saved aws credential as profile \"$TMP_PROFILE\""
