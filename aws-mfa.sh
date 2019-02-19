@@ -38,7 +38,7 @@ while getopts ":p:t:n:c:r:h" opt; do
         r)
             DEFAULT_REGION=$OPTARG
             ;;
-        :|h)
+        :|h|*)
             usage
             exit 1
             ;;
@@ -47,19 +47,19 @@ done
 
 if [ -z "$IAM_USER_ARN" ]; then
     echo -n "Type MFA ARN: "
-    read IAM_USER_ARN
+    read -r IAM_USER_ARN
 fi
 
 if [ -z "$AUTHCODE" ]; then
     echo -n "Type MFA authcode: "
-    read AUTHCODE
+    read -r AUTHCODE
 fi
 
-response=$(aws --profile=$PROFILE sts get-session-token --serial-number $IAM_USER_ARN --token-code $AUTHCODE)
+response=$(aws --profile="$PROFILE" sts get-session-token --serial-number "$IAM_USER_ARN" --token-code "$AUTHCODE")
 
-aws --profile=$TMP_PROFILE configure set default.region $DEFAULT_REGION
-aws --profile=$TMP_PROFILE configure set aws_access_key_id $(echo $response | jq -r .Credentials.AccessKeyId)
-aws --profile=$TMP_PROFILE configure set aws_secret_access_key $(echo $response | jq -r .Credentials.SecretAccessKey)
-aws --profile=$TMP_PROFILE configure set aws_session_token $(echo $response | jq -r .Credentials.SessionToken)
+aws --profile="$TMP_PROFILE" configure set default.region "$DEFAULT_REGION"
+aws --profile="$TMP_PROFILE" configure set aws_access_key_id "$(echo "$response" | jq -r .Credentials.AccessKeyId)"
+aws --profile="$TMP_PROFILE" configure set aws_secret_access_key "$(echo "$response" | jq -r .Credentials.SecretAccessKey)"
+aws --profile="$TMP_PROFILE" configure set aws_session_token "$(echo "$response" | jq -r .Credentials.SessionToken)"
 
 echo "Successfully saved aws credential as profile \"tmp\""
