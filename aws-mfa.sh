@@ -50,6 +50,8 @@ if [ -z "$IAM_USER_ARN" ]; then
     read -r IAM_USER_ARN
 fi
 
+echo "Using MFA device: $IAM_USER_ARN"
+
 if [ -z "$AUTHCODE" ]; then
     echo -n "Type MFA authcode: "
     read -r AUTHCODE
