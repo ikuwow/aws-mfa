@@ -45,6 +45,8 @@ while getopts ":p:t:n:c:r:h" opt; do
     esac
 done
 
+echo "Using \`$PROFILE\` profile"
+
 if [ -z "$IAM_MFR_ARN" ]; then
     echo -n "Type MFA ARN: "
     read -r IAM_MFR_ARN
