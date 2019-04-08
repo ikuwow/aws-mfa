@@ -48,8 +48,8 @@ done
 echo "Using \`$PROFILE\` profile"
 
 if [ -z "$IAM_MFA_ARN" ]; then
-    echo -n "Type MFA ARN: "
-    read -r IAM_MFA_ARN
+    IAM_MFA_ARN=$(aws --profile="$PROFILE" sts get-caller-identity | jq -r .Arn | sed 's/user/mfa/')
+    echo "MFA ARN: $IAM_MFA_ARN"
 fi
 
 if [ -z "$AUTHCODE" ]; then
