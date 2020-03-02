@@ -59,7 +59,7 @@ fi
 
 response=$(aws --profile="$PROFILE" sts get-session-token --serial-number "$IAM_MFA_ARN" --token-code "$AUTHCODE")
 
-aws --profile="$TMP_PROFILE" configure set default.region "$DEFAULT_REGION"
+aws --profile="$TMP_PROFILE" configure set region "$DEFAULT_REGION"
 aws --profile="$TMP_PROFILE" configure set aws_access_key_id "$(echo "$response" | jq -r .Credentials.AccessKeyId)"
 aws --profile="$TMP_PROFILE" configure set aws_secret_access_key "$(echo "$response" | jq -r .Credentials.SecretAccessKey)"
 aws --profile="$TMP_PROFILE" configure set aws_session_token "$(echo "$response" | jq -r .Credentials.SessionToken)"
